@@ -23,13 +23,13 @@ class UserLanguageConnectedRepository extends ServiceEntityRepository
 
     // INSERT USER LANGUAGE CONNECTED //
 
-    public function insertUserLanguageConnected($user_id, $language_id) {
+    public function insertUserLanguageConnected($user_id, $language_id, $created_at, $updated_at) {
 
         $conn = $this->getEntityManager()->getConnection();
 
         $sql = 'INSERT INTO user_language_connected
-                (user_id, language_id)
-                SELECT :user_id_1, :language_id_1
+                (user_id, language_id, created_at, updated_at)
+                SELECT :user_id_1, :language_id_1, :created_at_1, :updated_at_1
                 WHERE NOT EXISTS
                     (SELECT *
                      FROM user_language_connected
@@ -39,6 +39,8 @@ class UserLanguageConnectedRepository extends ServiceEntityRepository
         $result = $conn->executeQuery($sql, [
             'user_id_1' => $user_id,
             'language_id_1' => $language_id,
+            'created_at_1' => $created_at,
+            'updated_at_1' => $updated_at,
             'user_id_2' => $user_id,
             'language_id_2' => $language_id
         ]);
@@ -61,6 +63,21 @@ class UserLanguageConnectedRepository extends ServiceEntityRepository
         ]);
     }
 
+    // DELETE ALL BY ID -> USER LANGUAGE CONNECTED ( LOGOUT ) //
+
+    public function deleteUserLanguageConnectedAllById($user_id) {
+
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = 'DELETE
+                FROM user_language_connected
+                WHERE user_id = :user_id';
+
+        $result = $conn->executeQuery($sql, [
+            'user_id' => $user_id
+        ]);
+    }
+
     // GET USERS CONNECTED BY LANGUAGE //
 
     public function getUsersConnectedByLanguage($language_id) {
@@ -79,6 +96,47 @@ class UserLanguageConnectedRepository extends ServiceEntityRepository
         ]);
 
         return $result->fetchAllAssociative();
+    }
+
+
+
+
+    // GET ALL USERS CONNECTED //
+
+    public function getAllUsersConnected() {
+
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = 'SELECT
+                *
+                FROM user_language_connected';
+
+        $result = $conn->executeQuery($sql);
+
+        return $result->fetchAllAssociative();
+    }
+
+
+
+
+
+    // UPDATE LAST ACTIVITY USER CONNECTED //
+
+    public function updateActivity($user_id, $dateTimeFormat) {
+
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = 'UPDATE
+                user_language_connected
+                SET
+                updated_at = :updated_at
+                WHERE
+                user_id = :user_id';
+
+        $result = $conn->executeQuery($sql, [
+            'updated_at' => $dateTimeFormat,
+            'user_id' => $user_id
+        ]);
     }
 
 //    /**

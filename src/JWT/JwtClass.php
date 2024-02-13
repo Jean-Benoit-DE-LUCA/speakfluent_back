@@ -57,7 +57,7 @@ class JwtClass {
             'aud' => 'speakfluent',
             'iat' => $currentDateTime,
             'nbf' => $currentTimeStamp,
-            'exp' => $currentTimeStamp + 7200
+            'exp' => $currentTimeStamp + 18000  // 5 hours // 10800 // 3 hours //
         ];
 
         $jwt = JWT::encode($payload, $this->key, 'HS256');

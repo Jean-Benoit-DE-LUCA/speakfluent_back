@@ -2,27 +2,24 @@
 
 namespace App\Entity;
 
-use App\Repository\UserChatPasswordRepository;
+use App\Repository\ResetPasswordRepository;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: UserChatPasswordRepository::class)]
-class UserChatPassword
+#[ORM\Entity(repositoryClass: ResetPasswordRepository::class)]
+class ResetPassword
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $user_id = null;
+    #[ORM\Column(length: 255)]
+    private ?string $email = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $user_receive = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $chat_password = null;
+    #[ORM\Column(length: 255)]
+    private ?string $token = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?string $created_at = null;
@@ -30,12 +27,7 @@ class UserChatPassword
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?string $updated_at = null;
 
-    #[ORM\Column]
-    private ?int $user_owner_id = null;
-
-
-
-    public function __construct() {
+    public function __contruct() {
 
         $this->created_at = new \DateTime();
         $this->updated_at = new \DateTime();
@@ -46,38 +38,26 @@ class UserChatPassword
         return $this->id;
     }
 
-    public function getUserId(): ?int
+    public function getEmail(): ?string
     {
-        return $this->user_id;
+        return $this->email;
     }
 
-    public function setUserId(int $user_id): static
+    public function setEmail(string $email): static
     {
-        $this->user_id = $user_id;
+        $this->email = $email;
 
         return $this;
     }
 
-    public function getUserReceive(): ?int
+    public function getToken(): ?string
     {
-        return $this->user_receive;
+        return $this->token;
     }
 
-    public function setUserReceive(int $user_receive): static
+    public function setToken(string $token): static
     {
-        $this->user_receive = $user_receive;
-
-        return $this;
-    }
-
-    public function getChatPassword(): ?string
-    {
-        return $this->chat_password;
-    }
-
-    public function setChatPassword(string $chat_password): static
-    {
-        $this->chat_password = $chat_password;
+        $this->token = $token;
 
         return $this;
     }

@@ -85,13 +85,14 @@ class UserRepository extends ServiceEntityRepository
         $address,
         $zip,
         $city,
-        $password
+        $password,
+        $photo
     ) {
 
         $conn = $this->getEntityManager()->getConnection();
         $sql = 'INSERT
-                INTO user (name, firstname, email, birthdate, gender, address, zip, city, password)
-                VALUES (:name, :firstname, :email, :birthdate, :gender, :address, :zip, :city, :password);';
+                INTO user (name, firstname, email, birthdate, gender, address, zip, city, password, photo)
+                VALUES (:name, :firstname, :email, :birthdate, :gender, :address, :zip, :city, :password, :photo);';
 
         $result = $conn->executeQuery($sql, [
             'name' => $name,
@@ -102,10 +103,129 @@ class UserRepository extends ServiceEntityRepository
             'address' => $address,
             'zip' => $zip,
             'city' => $city,
-            'password' => $password
+            'password' => $password,
+            'photo' => $photo
         ]);
 
         return $conn->lastInsertId();
+    }
+
+
+
+
+
+
+
+    // UPDATE USER //
+
+    public function updateUser($name, $firstname, $email, $birthdate, $gender, $address, $zip, $city, $password_hash, $photo, $user_id) {
+
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = 'UPDATE
+                user
+                SET name = :name,
+                    firstname = :firstname,
+                    email = :email,
+                    birthdate = :birthdate,
+                    gender = :gender,
+                    address = :address,
+                    zip = :zip,
+                    city = :city,
+                    password = :password_hash,
+                    photo = :photo
+                WHERE id = :user_id';
+
+        $result = $conn->executeQuery($sql, [
+            'name' => $name,
+            'firstname' => $firstname,
+            'email' => $email,
+            'birthdate' => $birthdate,
+            'gender' => $gender,
+            'address' => $address,
+            'zip' => $zip,
+            'city' => $city,
+            'password_hash' => $password_hash,
+            'photo' => $photo,
+            'user_id' => $user_id
+        ]);
+    }
+
+
+
+
+
+    // UPDATE USER ( NO PHOTO UPDATE ) //
+
+    public function updateUserNoPhoto($name, $firstname, $email, $birthdate, $gender, $address, $zip, $city, $password_hash, $user_id) {
+
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = 'UPDATE
+                user
+                SET name = :name,
+                    firstname = :firstname,
+                    email = :email,
+                    birthdate = :birthdate,
+                    gender = :gender,
+                    address = :address,
+                    zip = :zip,
+                    city = :city,
+                    password = :password_hash
+                WHERE id = :user_id';
+
+        $result = $conn->executeQuery($sql, [
+            'name' => $name,
+            'firstname' => $firstname,
+            'email' => $email,
+            'birthdate' => $birthdate,
+            'gender' => $gender,
+            'address' => $address,
+            'zip' => $zip,
+            'city' => $city,
+            'password_hash' => $password_hash,
+            'user_id' => $user_id
+        ]);
+    }
+
+
+
+
+
+    // UPDATE PASSWORD (RESET PASSWORD) //
+
+    public function setNewPassword($password, $email) {
+
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = 'UPDATE
+                user
+                SET password = :password
+                WHERE email = :email';
+
+        $result = $conn->executeQuery($sql, [
+            'password' => $password,
+            'email' => $email
+        ]);
+    }
+
+
+
+
+
+    // DELETE USER //
+
+    public function deleteUser($user_id) {
+
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = 'DELETE
+                FROM user
+                where id = :user_id';
+
+        $result = $conn->executeQuery($sql, [
+            'user_id' => $user_id
+        ]);
     }
 
 //    /**
